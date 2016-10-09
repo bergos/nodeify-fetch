@@ -1,6 +1,6 @@
 {
   "name": "nodeify-fetch",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Node streams for fetch",
   "main": "index.js",
   "scripts": {
