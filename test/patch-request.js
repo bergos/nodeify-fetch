@@ -1,10 +1,8 @@
-'use strict'
-
 /* global describe, it */
 
 var assert = require('assert')
 var patchRequest = require('../lib/patch-request')
-var Readable = require('stream').Readable
+var Readable = require('readable-stream')
 
 describe('patchRequest', function () {
   it('should accept null options', function () {

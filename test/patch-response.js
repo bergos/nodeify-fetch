@@ -1,5 +1,3 @@
-'use strict'
-
 /* global describe, it */
 
 var assert = require('assert')
@@ -7,6 +5,15 @@ var patchResponse = require('../lib/patch-response')
 var Readable = require('stream').Readable
 
 describe('patchResponse', function () {
+  // not implemented in Firefix 51
+  /* it('should do nothing if there is no body', function () {
+    var res = {}
+
+    patchResponse(res)
+
+    assert.equal(typeof res.readable, 'undefined')
+  }) */
+
   it('should use .getReader if available', function () {
     var touched = false
 
@@ -20,27 +27,45 @@ describe('patchResponse', function () {
 
     patchResponse(res)
 
-    res.body.getReadable()
+    res.readable()
 
     assert.equal(touched, true)
   })
 
   it('should forward body, if it\'s already a readable', function () {
-    var readable = new Readable()
+    var stream = new Readable()
 
     var res = {
-      body: readable
+      body: stream
     }
 
     patchResponse(res)
 
-    assert.equal(res.body.getReadable(), readable)
+    return res.readable().then(function (readable) {
+      assert.equal(stream, readable)
+    })
+  })
+
+  it('should throw an error if body is already in use', function () {
+    var res = {
+      body: {},
+      bodyUsed: true
+    }
+
+    patchResponse(res)
+
+    return new Promise(function (resolve, reject) {
+      res.readable().then(function () {
+        reject(new Error('no error thrown'))
+      }).catch(resolve)
+    })
   })
 
   it('should use .arrayBuffer if there is no stream', function () {
     var touched = false
 
     var res = {
+      body: {},
       arrayBuffer: function () {
         touched = true
 
@@ -51,11 +76,15 @@ describe('patchResponse', function () {
     patchResponse(res)
 
     return new Promise(function (resolve) {
-      res.body.getReadable().on('end', function () {
-        assert.equal(touched, true)
+      res.readable().then(function (readable) {
+        readable.on('end', function () {
+          assert.equal(touched, true)
 
-        resolve()
-      }).resume()
+          resolve()
+        })
+
+        readable.resume()
+      })
     })
   })
 })
