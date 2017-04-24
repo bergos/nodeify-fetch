@@ -9,14 +9,14 @@ The `.readable` method returns the readable stream as Promise:
 
     const fetch = require('nodeify-fetch')
     
-    fetch('url').then((response) => { 
-      let stream = response.readable().then((stream) => {
-        stream.on('data', (chunk) => {
-          ...
-        })
+    fetch('url').then(response) => {
+      return response.readable()
+    }).then((stream) => {
+      stream.on('data', (chunk) => {
+        ...
+      })
 
-        stream.on('end', () => {
-          ...
-        })
+      stream.on('end', () => {
+        ...
       })
     })
