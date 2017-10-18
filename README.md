@@ -5,18 +5,19 @@ It's based on `isomorphic-fetch` for node and browser support.
 
 ## Usage
 
-The `.readable` method returns the readable stream as Promise:
+The only difference to the fetch standard is the `.body` property.
+`nodeify-fetch` patches the `.body` to a readable stream: 
 
-    const fetch = require('nodeify-fetch')
-    
-    fetch('url').then(response) => {
-      return response.readable()
-    }).then((stream) => {
-      stream.on('data', (chunk) => {
-        ...
-      })
+```
+const fetch = require('nodeify-fetch')
 
-      stream.on('end', () => {
-        ...
-      })
-    })
+fetch('url').then(res) => {
+  res.body.on('data', (chunk) => {
+    ...
+  })
+
+  res.body.on('end', () => {
+    ...
+  })
+})
+```

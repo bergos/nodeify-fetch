@@ -1,10 +1,10 @@
-var isoFetch = require('isomorphic-fetch')
-var patchRequest = require('./lib/patch-request')
-var patchResponse = require('./lib/patch-response')
+const isoFetch = require('isomorphic-fetch')
+const patchRequest = require('./lib/patchRequest')
+const patchResponse = require('./lib/patchResponse')
 
 function fetch (url, options) {
-  return patchRequest(options).then(function (options) {
-    return isoFetch(url, options).then(function (res) {
+  return patchRequest(options).then((options) => {
+    return isoFetch(url, options).then((res) => {
       return patchResponse(res)
     })
   })

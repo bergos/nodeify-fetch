@@ -1,30 +1,38 @@
-/* global describe, it */
+/* global before, describe, it */
 
-var assert = require('assert')
-var fetch = require('..')
+const assert = require('assert')
+const fetch = require('..')
+const server = require('./support/server')
 
-describe('fetch', function () {
-  it('response should have a .readable method', function () {
-    return fetch('http://localhost:8081/plain-text').then(function (response) {
-      assert.equal(typeof response.readable, 'function')
+describe('fetch', () => {
+  before(() => {
+    if (server.init) {
+      return server.init().then(() => {
+        server.init = null
+      })
+    }
+  })
+
+  it('response .body should be a stream', () => {
+    return fetch('http://localhost:8081/plain-text').then((response) => {
+      assert.equal(typeof response.body, 'object')
+      assert.equal(response.body.readable, true)
     })
   })
 
-  it('response method .readable should return a readable stream', function () {
-    return fetch('http://localhost:8081/plain-text').then(function (response) {
-      return response.readable().then(function (readable) {
-        return new Promise(function (resolve) {
-          var content = ''
+  it('response .body should forward the content', () => {
+    return fetch('http://localhost:8081/plain-text').then((response) => {
+      return new Promise((resolve) => {
+        let content = ''
 
-          readable.on('end', function () {
-            assert.equal(content, 'text')
+        response.body.on('end', () => {
+          assert.equal(content, 'text')
 
-            resolve()
-          })
+          resolve()
+        })
 
-          readable.on('data', function (chunk) {
-            content += chunk
-          })
+        response.body.on('data', (chunk) => {
+          content += chunk
         })
       })
     })

@@ -1,25 +1,19 @@
-var Promise = require('bluebird')
-var express = require('express')
-var path = require('path')
+const Promise = require('bluebird')
+const express = require('express')
+const path = require('path')
 
-var app = express()
+const app = express()
 
-app.use(express.static(path.join(__dirname, '../../.build/browser-test')))
+app.use(express.static(path.join(__dirname, '../../.build/')))
+app.use(express.static(path.join(__dirname, 'public')))
+app.use(express.static(path.dirname(require.resolve('mocha'))))
 
-app.get('/plain-text', function (req, res) {
+app.get('/plain-text', (req, res) => {
   res.send('text')
 })
 
 function init () {
-  return new Promise(function (resolve, reject) {
-    app.listen(8081, 'localhost', function (err) {
-      if (err) {
-        reject(err)
-      } else {
-        resolve(app)
-      }
-    })
-  })
+  return Promise.promisify(app.listen, {context: app})(8081, 'localhost')
 }
 
 init().then(function () {
