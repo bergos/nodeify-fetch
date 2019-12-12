@@ -10,4 +10,6 @@ function fetch (url, options) {
   })
 }
 
+fetch.Headers = global.Headers
+
 module.exports = fetch
