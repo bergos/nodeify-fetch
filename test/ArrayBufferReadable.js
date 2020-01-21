@@ -1,11 +1,11 @@
 /* global describe, it */
 
-const assert = require('assert')
+const { deepStrictEqual, strictEqual } = require('assert')
 const ArrayBufferReadable = require('../lib/ArrayBufferReadable')
 
 describe('ArrayBufferReadable', () => {
   it('should be a constructor', () => {
-    assert.equal(typeof ArrayBufferReadable, 'function')
+    strictEqual(typeof ArrayBufferReadable, 'function')
   })
 
   it('should emit an end event', () => {
@@ -31,7 +31,7 @@ describe('ArrayBufferReadable', () => {
 
     return new Promise((resolve) => {
       readable.on('data', (chunk) => {
-        assert.deepEqual(chunk, arrayBuffer)
+        deepStrictEqual(chunk, arrayBuffer)
 
         resolve()
       })

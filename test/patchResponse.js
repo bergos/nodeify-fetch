@@ -1,8 +1,8 @@
 /* global describe, it */
 
-const assert = require('assert')
+const { strictEqual } = require('assert')
 const patchResponse = require('../lib/patchResponse')
-const Readable = require('stream').Readable
+const { Readable } = require('readable-stream')
 
 describe('patchResponse', () => {
   // not implemented in Firefox 51
@@ -11,7 +11,7 @@ describe('patchResponse', () => {
 
     patchResponse(res)
 
-    assert.equal(typeof res.body, 'undefined')
+    strictEqual(typeof res.body, 'undefined')
   }) */
 
   it('should use .getReader if available', () => {
@@ -42,7 +42,7 @@ describe('patchResponse', () => {
 
     return new Promise((resolve) => {
       res.body.on('end', () => {
-        assert.equal(touched, true)
+        strictEqual(touched, true)
 
         resolve()
       })
@@ -60,7 +60,7 @@ describe('patchResponse', () => {
 
     res = patchResponse(res)
 
-    assert.equal(stream, res.body)
+    strictEqual(stream, res.body)
   })
 
   it('should emit an error if body is already in use', () => {
@@ -94,7 +94,7 @@ describe('patchResponse', () => {
 
     return new Promise((resolve) => {
       res.body.on('end', () => {
-        assert.equal(touched, true)
+        strictEqual(touched, true)
 
         resolve()
       })

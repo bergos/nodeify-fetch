@@ -8,7 +8,7 @@
   },
   "scripts": {
     "test": "standard && mocha",
-    "test-browser": "mkdir -p .build && browserify -d test/*.js > .build/index.js"
+    "test-browser": "mkdir -p .build && webpack test/*.js -o .build/index.js --mode development"
   },
   "repository": {
     "type": "git",
@@ -27,15 +27,16 @@
   "homepage": "https://github.com/bergos/nodeify-fetch",
   "dependencies": {
     "concat-stream": "^1.6.0",
-    "isomorphic-fetch": "^2.2.1",
+    "cross-fetch": "^3.0.4",
     "readable-error": "^1.0.0",
-    "readable-stream": "^2.2.6"
+    "readable-stream": "^3.5.0"
   },
   "devDependencies": {
-    "bluebird": "^3.5.0",
-    "browserify": "^14.4.0",
-    "express": "^4.15.2",
-    "mocha": "^3.2.0",
-    "standard": "^10.0.3"
+    "express": "^4.17.1",
+    "express-as-promise": "0.0.1",
+    "mocha": "^7.0.0",
+    "standard": "^14.3.1",
+    "webpack": "^4.41.5",
+    "webpack-cli": "^3.3.10"
   }
 }

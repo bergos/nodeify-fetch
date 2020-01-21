@@ -1,17 +1,17 @@
 /* global describe, it */
 
-const assert = require('assert')
+const { strictEqual } = require('assert')
 const WhatwgReadable = require('../lib/WhatwgReadable')
 
 describe('WhatwgReadable', () => {
   it('should be a constructor', () => {
-    assert.equal(typeof WhatwgReadable, 'function')
+    strictEqual(typeof WhatwgReadable, 'function')
   })
 
   it('should emit an end event', () => {
     const whatwg = {
       read: () => {
-        return Promise.resolve({done: true})
+        return Promise.resolve({ done: true })
       }
     }
 
@@ -30,9 +30,9 @@ describe('WhatwgReadable', () => {
     const whatwg = {
       read: () => {
         if (counter > 0) {
-          return Promise.resolve({value: 'test'})
+          return Promise.resolve({ value: 'test' })
         } else {
-          return Promise.resolve({done: true})
+          return Promise.resolve({ done: true })
         }
       }
     }
@@ -41,7 +41,7 @@ describe('WhatwgReadable', () => {
 
     return new Promise((resolve) => {
       readable.on('data', (chunk) => {
-        assert.equal(chunk, 'test')
+        strictEqual(chunk.toString(), 'test')
 
         counter--
       })
@@ -61,7 +61,7 @@ describe('WhatwgReadable', () => {
 
     return new Promise((resolve) => {
       readable.on('error', (err) => {
-        assert.equal(err.message, 'test')
+        strictEqual(err.message, 'test')
 
         resolve()
       })

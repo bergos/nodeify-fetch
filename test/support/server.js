@@ -1,8 +1,9 @@
-const Promise = require('bluebird')
 const express = require('express')
+const ExpressAsPromise = require('express-as-promise')
 const path = require('path')
 
-const app = express()
+const server = new ExpressAsPromise()
+const app = server.app
 
 app.use(express.static(path.join(__dirname, '../../.build/')))
 app.use(express.static(path.join(__dirname, 'public')))
@@ -13,7 +14,11 @@ app.get('/plain-text', (req, res) => {
 })
 
 function init () {
-  return Promise.promisify(app.listen, {context: app})(8081, 'localhost')
+  return server.listen(8081, 'localhost')
+}
+
+init.stop = () => {
+  return server.stop()
 }
 
 init().then(function () {

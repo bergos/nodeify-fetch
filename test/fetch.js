@@ -1,6 +1,6 @@
-/* global before, describe, it */
+/* global after, before, describe, it */
 
-const assert = require('assert')
+const { strictEqual } = require('assert')
 const fetch = require('..')
 const server = require('./support/server')
 
@@ -13,10 +13,14 @@ describe('fetch', () => {
     }
   })
 
+  after(() => {
+    return server.stop()
+  })
+
   it('response .body should be a stream', () => {
     return fetch('http://localhost:8081/plain-text').then((response) => {
-      assert.equal(typeof response.body, 'object')
-      assert.equal(response.body.readable, true)
+      strictEqual(typeof response.body, 'object')
+      strictEqual(response.body.readable, true)
     })
   })
 
@@ -26,7 +30,7 @@ describe('fetch', () => {
         let content = ''
 
         response.body.on('end', () => {
-          assert.equal(content, 'text')
+          strictEqual(content, 'text')
 
           resolve()
         })
