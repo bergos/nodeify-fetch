@@ -1,5 +1,6 @@
+/* global describe, it */
+
 const { strictEqual } = require('assert')
-const { describe, it } = require('mocha')
 const { Headers } = require('..')
 
 describe('Headers', () => {
@@ -12,6 +13,7 @@ describe('Headers', () => {
 
     strictEqual(typeof headers.append, 'function')
     strictEqual(typeof headers.delete, 'function')
+    strictEqual(typeof headers.entries, 'function')
     strictEqual(typeof headers.get, 'function')
     strictEqual(typeof headers.has, 'function')
     strictEqual(typeof headers.set, 'function')

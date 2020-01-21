@@ -1,11 +1,11 @@
 /* global describe, it */
 
-const assert = require('assert')
+const { deepStrictEqual, notStrictEqual, strictEqual } = require('assert')
 const PatchableResponse = require('../lib/PatchableResponse')
 
 describe('PatchableResponse', () => {
   it('should be a constructor', () => {
-    assert.equal(typeof PatchableResponse, 'function')
+    strictEqual(typeof PatchableResponse, 'function')
   })
 
   it('should wrap methods of the object', () => {
@@ -22,8 +22,8 @@ describe('PatchableResponse', () => {
 
     res.test()
 
-    assert.notEqual(res.test, obj.test)
-    assert(touched)
+    notStrictEqual(res.test, obj.test)
+    strictEqual(touched, true)
   })
 
   it('should wrap properties of the object', () => {
@@ -42,11 +42,11 @@ describe('PatchableResponse', () => {
     const obj = new Test()
     const res = new PatchableResponse(obj, {})
 
-    assert.equal(res.test, 'initial')
+    strictEqual(res.test, 'initial')
 
     res.test = 'changed'
 
-    assert.equal(res.test, 'changed')
+    strictEqual(res.test, 'changed')
   })
 
   it('should use patched properties and methods', () => {
@@ -70,8 +70,8 @@ describe('PatchableResponse', () => {
       method: method
     })
 
-    assert.equal(res.property, 'patched')
-    assert.equal(res.method(), 'patched')
+    strictEqual(res.property, 'patched')
+    strictEqual(res.method(), 'patched')
   })
 
   it('.properties should list all properties of the class', () => {
@@ -82,6 +82,6 @@ describe('PatchableResponse', () => {
 
     const properties = PatchableResponse.properties(new Test())
 
-    assert.deepEqual(properties, ['constructor', 'test0', 'test1'])
+    deepStrictEqual(properties, ['constructor', 'test0', 'test1'])
   })
 })
