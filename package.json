@@ -4,6 +4,7 @@
   "description": "Node streams for fetch",
   "main": "index.js",
   "browser": {
+    "./index.js": "./browser.js",
     "./test/support/server": "./test/support/browser"
   },
   "scripts": {
