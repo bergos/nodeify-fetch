@@ -1,1 +1,1 @@
-module.exports = require('cross-fetch')
+module.exports = require('@zazuko/node-fetch')

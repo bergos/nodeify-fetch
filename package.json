@@ -27,6 +27,7 @@
   },
   "homepage": "https://github.com/bergos/nodeify-fetch",
   "dependencies": {
+    "@zazuko/node-fetch": "^2.6.6",
     "concat-stream": "^1.6.0",
     "cross-fetch": "^3.0.4",
     "readable-error": "^1.0.0",
