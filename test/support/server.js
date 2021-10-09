@@ -1,30 +1,36 @@
-const express = require('express')
-const ExpressAsPromise = require('express-as-promise')
-const path = require('path')
+import { createHash, randomBytes } from 'crypto'
+import express from 'express'
+import withPlainServer from 'express-as-promise/withServer.js'
 
-const server = new ExpressAsPromise()
-const app = server.app
+async function withServer (callback) {
+  await withPlainServer(async server => {
+    server.app.use(express.static((new URL('../../.build/', import.meta.url)).pathname))
+    server.app.use(express.static((new URL('public', import.meta.url)).pathname))
+    server.app.use(express.static((new URL('../../node_modules/mocha', import.meta.url)).pathname))
 
-app.use(express.static(path.join(__dirname, '../../.build/')))
-app.use(express.static(path.join(__dirname, 'public')))
-app.use(express.static(path.dirname(require.resolve('mocha'))))
+    server.app.get('/plain-text', (req, res) => res.send('text'))
 
-app.get('/plain-text', (req, res) => {
-  res.send('text')
-})
+    server.app.post('/plain-text', express.text({ type: '*/*' }), (req, res) => {
+      if (req.body === 'test') {
+        res.status(201)
+      } else {
+        res.status(500)
+      }
 
-function init () {
-  return server.listen(8081, 'localhost')
+      res.end()
+    })
+
+    server.app.get('/random', (req, res) => {
+      const content = randomBytes(1 << 20)
+      const hash = createHash('sha256')
+
+      hash.update(content)
+
+      res.set('sha256', hash.digest('hex')).send(content)
+    })
+
+    await callback(server)
+  })
 }
 
-init.stop = () => {
-  return server.stop()
-}
-
-init().then(function () {
-  console.log('http://localhost:8081/')
-}).catch(function (err) {
-  console.error(err.stack || err.message)
-})
-
-module.exports = init
+export default withServer
