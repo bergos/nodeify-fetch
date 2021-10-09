@@ -1,15 +1,19 @@
-const crossFetch = require('cross-fetch')
-const patchRequest = require('./lib/patchRequest')
-const patchResponse = require('./lib/patchResponse')
+/* global fetch */
 
-function fetch (url, options) {
-  return patchRequest(options).then((options) => {
-    return crossFetch(url, options).then((res) => {
+import patchRequest from './lib/patchRequest.js'
+import patchResponse from './lib/patchResponse.js'
+
+const Headers = window.Headers
+
+function nodeifyFetch (url, options) {
+  return patchRequest(options).then(options => {
+    return fetch(url, options).then(res => {
       return patchResponse(res)
     })
   })
 }
 
-fetch.Headers = crossFetch.Headers
-
-module.exports = fetch
+export {
+  nodeifyFetch as default,
+  Headers
+}
