@@ -1,12 +1,15 @@
 import { createHash, randomBytes } from 'crypto'
+import { dirname, resolve } from 'path'
 import express from 'express'
 import withPlainServer from 'express-as-promise/withServer.js'
 
+const _dirname = dirname((new URL(import.meta.url)).pathname)
+
 async function withServer (callback) {
   await withPlainServer(async server => {
-    server.app.use(express.static((new URL('../../.build/', import.meta.url)).pathname))
-    server.app.use(express.static((new URL('public', import.meta.url)).pathname))
-    server.app.use(express.static((new URL('../../node_modules/mocha', import.meta.url)).pathname))
+    server.app.use(express.static(resolve(_dirname, '../../node_modules/test-runner-browser/public')))
+    server.app.use(express.static(resolve(_dirname, '../../node_modules/mocha')))
+    server.app.use(express.static(resolve(_dirname, '../../dist/')))
 
     server.app.get('/plain-text', (req, res) => res.send('text'))
 

@@ -1,7 +1,7 @@
 import { deepStrictEqual, rejects, strictEqual } from 'assert'
 import { describe, it } from 'mocha'
+import concat from 'stream-chunks/concat.js'
 import arrayBufferToReadable from '../lib/arrayBufferToReadable.js'
-import getStream from '../lib/getStream.js'
 
 describe('arrayBufferToReadable', () => {
   it('should be a function', () => {
@@ -12,9 +12,9 @@ describe('arrayBufferToReadable', () => {
     const arrayBuffer = Uint8Array.from([0, 1, 2, 3]).buffer
 
     const stream = arrayBufferToReadable(async () => arrayBuffer)
-    const result = Buffer.concat(await getStream(stream))
+    const result = await concat(stream)
 
-    deepStrictEqual(result, Buffer.from([0, 1, 2, 3]))
+    deepStrictEqual(result, Uint8Array.from([0, 1, 2, 3]))
   })
 
   it('should forward errors', async () => {
@@ -23,7 +23,9 @@ describe('arrayBufferToReadable', () => {
     })
 
     await rejects(async () => {
-      await getStream(stream)
+      await concat(stream)
+    }, {
+      message: 'test'
     })
   })
 })

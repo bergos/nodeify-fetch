@@ -1,8 +1,10 @@
 import { deepStrictEqual, rejects, strictEqual } from 'assert'
 import { describe, it } from 'mocha'
 import delay from 'promise-the-world/delay.js'
-import getStream from '../lib/getStream.js'
+import chunks from 'stream-chunks/chunks.js'
+import concat from 'stream-chunks/concat.js'
 import whatwgToReadable from '../lib/whatwgToReadable.js'
+import encodeString from './support/encodeString.js'
 import { toErrorStream, toStream } from './support/toWhatwg.js'
 
 describe('whatwgToReadable', () => {
@@ -10,19 +12,33 @@ describe('whatwgToReadable', () => {
     strictEqual(typeof whatwgToReadable, 'function')
   })
 
-  it('should forward the chunks from the WHATWG readable', async () => {
-    const stream = whatwgToReadable(toStream(['ab', 'cd']))
+  it('should handle string chunks from the WHATWG readable', async () => {
+    const input = ['ab', 'cd']
+    const expected = encodeString(input.join(''))
+    const stream = whatwgToReadable(toStream(input))
 
-    const result = await getStream(stream)
+    const result = await concat(stream)
 
-    deepStrictEqual(result, [Buffer.from('ab'), Buffer.from('cd')])
+    deepStrictEqual(result, expected)
+  })
+
+  it('should handle Uint8Array chunks from the WHATWG readable', async () => {
+    const input = [new Uint8Array([0, 1]), new Uint8Array([2, 3])]
+    const expected = new Uint8Array([0, 1, 2, 3])
+    const stream = whatwgToReadable(toStream(input))
+
+    const result = await concat(stream)
+
+    deepStrictEqual(result, expected)
   })
 
   it('should forward errors from the WHATWG readable', async () => {
     const stream = whatwgToReadable(toErrorStream(new Error('test')))
 
     await rejects(async () => {
-      await getStream(stream)
+      await chunks(stream)
+    }, {
+      message: 'test'
     })
   })
 

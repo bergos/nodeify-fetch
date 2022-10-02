@@ -1,4 +1,6 @@
 # nodeify-fetch
+[![build status](https://img.shields.io/github/workflow/status/bergos/nodeify-fetch/Test)](https://github.com/bergos/nodeify-fetch/actions/workflows/test.yaml)
+[![npm version](https://img.shields.io/npm/v/nodeify-fetch.svg)](https://www.npmjs.com/package/nodeify-fetch)
 
 The `nodeify-fetch` package provides a Node.js [Readable](https://nodejs.org/api/stream.html#stream_class_stream_readable) stream interface for [fetch](https://fetch.spec.whatwg.org/).
 In the browser, the built-in fetch is used.

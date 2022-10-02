@@ -1,9 +1,10 @@
 import { strictEqual } from 'assert'
-import { createHash } from 'crypto'
 import { describe, it } from 'mocha'
 import { Readable } from 'readable-stream'
+import shajs from 'sha.js'
+import concat from 'stream-chunks/concat.js'
+import decode from 'stream-chunks/decode.js'
 import fetch from '../index.js'
-import getStream from '../lib/getStream.js'
 import withServer from './support/server.js'
 
 describe('fetch', () => {
@@ -55,7 +56,7 @@ describe('fetch', () => {
       await withServer(async server => {
         const response = await fetch(new URL('plain-text', await server.listen()))
 
-        const content = Buffer.concat(await getStream(response.body))
+        const content = await decode(response.body, 'utf8')
 
         strictEqual(content.toString(), 'text')
       })
@@ -66,15 +67,11 @@ describe('fetch', () => {
         const response = await fetch(new URL('random', await server.listen()))
 
         const sum = response.headers.get('sha256')
-        const content = await getStream(response.body)
+        const content = await concat(response.body)
 
-        const hash = createHash('sha256')
+        const hash = shajs('sha256')
 
-        for (const chunk of content) {
-          hash.update(chunk)
-        }
-
-        strictEqual(hash.digest('hex'), sum)
+        strictEqual(hash.update(content).digest('hex'), sum)
       })
     })
   })

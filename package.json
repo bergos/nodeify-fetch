@@ -9,11 +9,8 @@
     "./test/support/server.js": "./test/support/browser-server.js"
   },
   "scripts": {
-    "build-test": "mkdir -p .build && webpack ./test/*.js -o .build --mode development",
-    "coverage": "codecov",
-    "start-test-server": "node ./test/support/serve.js",
-    "test": "stricter-standard && c8 --reporter=lcov --reporter=text-summary mocha",
-    "watch-test": "webpack -o .build --mode development --watch"
+    "browser-test": "./test/support/test-browser.js",
+    "test": "stricter-standard && c8 --reporter=lcov --reporter=text-summary mocha"
   },
   "repository": {
     "type": "git",
@@ -32,21 +29,20 @@
   "homepage": "https://github.com/bergos/nodeify-fetch",
   "dependencies": {
     "lodash": "^4.17.21",
-    "node-fetch": "^3.0.0",
-    "readable-error": "^1.0.0",
-    "readable-stream": "^3.6.0"
+    "node-fetch": "^3.2.10",
+    "readable-stream": "^4.2.0",
+    "stream-chunks": "^1.0.0"
   },
   "devDependencies": {
-    "c8": "^7.10.0",
-    "codecov": "^3.8.3",
-    "express": "^4.17.1",
+    "assert": "^2.0.0",
+    "c8": "^7.12.0",
+    "express": "^4.18.1",
     "express-as-promise": "^1.2.0",
-    "glob": "^7.2.0",
-    "mocha": "^9.1.2",
-    "node-polyfill-webpack-plugin": "^1.1.4",
+    "mocha": "^10.0.0",
     "promise-the-world": "^1.0.1",
+    "sha.js": "^2.4.11",
     "stricter-standard": "^0.2.0",
-    "webpack": "^5.58.0",
-    "webpack-cli": "^4.9.0"
+    "test-runner-browser": "^0.1.0",
+    "zx": "^7.0.8"
   }
 }
