@@ -1,8 +1,8 @@
 import { strictEqual } from 'assert'
 import { describe, it } from 'mocha'
 import { Readable } from 'readable-stream'
-import getStream from '../lib/getStream.js'
-import patchResponse from '../lib/patchResponse.js'
+import decode from 'stream-chunks/decode.js'
+import patchResponse from '../lib/patchResponse.browser.js'
 import { toReader } from './support/toWhatwg.js'
 
 describe('patchResponse', () => {
@@ -17,9 +17,9 @@ describe('patchResponse', () => {
 
     const patched = patchResponse(res)
 
-    const content = Buffer.concat(await getStream(patched.body))
+    const content = await decode(patched.body, 'utf8')
 
-    strictEqual(content.toString(), 'test')
+    strictEqual(content, 'test')
   })
 
   it('should forward body, if it\'s already a readable', () => {

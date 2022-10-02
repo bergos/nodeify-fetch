@@ -1,7 +1,7 @@
 /* global fetch */
 
-import patchRequest from './lib/patchRequest.js'
-import patchResponse from './lib/patchResponse.js'
+import patchRequest from './lib/patchRequest.browser.js'
+import patchResponse from './lib/patchResponse.browser.js'
 
 const Headers = window.Headers
 

@@ -1,7 +1,8 @@
 import { deepStrictEqual, strictEqual } from 'assert'
 import { describe, it } from 'mocha'
 import { Readable } from 'readable-stream'
-import patchRequest from '../lib/patchRequest.js'
+import patchRequest from '../lib/patchRequest.browser.js'
+import encodeString from './support/encodeString.js'
 
 describe('patchRequest', () => {
   it('should be a function', () => {
@@ -35,19 +36,19 @@ describe('patchRequest', () => {
     strictEqual(options.body, 'test1234')
   })
 
-  it('should convert a buffer stream to a string', async () => {
+  it('should convert a buffer stream to a Uint8Array', async () => {
     const body = new Readable({
       read: () => {
-        body.push(Buffer.from('test'))
-        body.push(Buffer.from('1234'))
+        body.push(encodeString('test'))
+        body.push(encodeString('1234'))
         body.push(null)
       }
     })
 
     const options = await patchRequest({ body })
 
-    strictEqual(Buffer.isBuffer(options.body), true)
-    deepStrictEqual(options.body, Buffer.from('test1234'))
+    strictEqual(options.body.BYTES_PER_ELEMENT, 1)
+    deepStrictEqual(options.body, encodeString('test1234'))
   })
 
   it('should convert an empty stream to an empty string', async () => {
