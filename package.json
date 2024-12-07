@@ -43,6 +43,6 @@
     "sha.js": "^2.4.11",
     "stricter-standard": "^0.2.0",
     "test-runner-browser": "^0.1.0",
-    "zx": "^7.0.8"
+    "zx": "^8.2.4"
   }
 }
